@@ -1,0 +1,6 @@
+Namespace(batch_size=16, ckpt_path='ckpt/MNLI_roberta-base.pt', dev_path='calibration_data/MNLI/dev.txt', device=0, do_evaluate=True, do_train=True, epochs=1, label_smoothing=-1.0, learning_rate=1e-05, max_grad_norm=1.0, max_seq_length=256, model='roberta-base', output_path='output/MNLI_roberta-base.json', task='MNLI', test_path='calibration_data/MNLI/test.txt', train_path='calibration_data/MNLI/train.txt', weight_decay=0.1)
+train samples = 391176
+dev samples = 4772
+test samples = 4907
+
+*** training ***

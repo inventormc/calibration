@@ -226,8 +226,8 @@ class TwitterPPDBProcessor:
     """Data loader for TwittrPPDB."""
 
     def valid_inputs(self, sentence1, sentence2, label):
-        return len(sentence1) > 0 and len(sentence2) > 0 and label != 3 
-    
+        return len(sentence1) > 0 and len(sentence2) > 0 and label != 3
+
     def load_samples(self, path):
         samples = []
         with open(path, newline='') as f:
@@ -322,7 +322,7 @@ class TextDataset(Dataset):
                     context, ending_start, endings
                 )
             label_id = encode_label(label)
-            res = ((input_ids, segment_ids, attention_mask), label_id)
+            res = ((input_ids, segment_ids, attention_mask), label_id, sentence1, sentence2)
             self.cache[i] = res
         return res
 
@@ -452,7 +452,7 @@ if args.do_train:
 if args.do_evaluate:
     if not os.path.exists(args.ckpt_path):
         raise RuntimeError(f'\'{args.ckpt_path}\' does not exist')
-    
+
     print()
     print('*** evaluating ***')
 
@@ -461,7 +461,7 @@ if args.do_evaluate:
     model.eval()
     test_loader = tqdm(load(test_dataset, args.batch_size, False))
 
-    for i, (inputs, label) in enumerate(test_loader):
+    for i, (inputs, label, sentence1, sentence2) in enumerate(test_loader):
         with torch.no_grad():
             logits = model(*inputs)
             for j in range(logits.size(0)):
@@ -473,6 +473,8 @@ if args.do_evaluate:
                     'conf': probs.max().item(),
                     'logits': logits[j].cpu().numpy().tolist(),
                     'probs': probs.cpu().numpy().tolist(),
+                    'sentence1': sentence1,
+                    'sentence2': sentence2
                 }
                 output_dicts.append(output_dict)
 
